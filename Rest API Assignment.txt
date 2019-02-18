@@ -1,48 +1,259 @@
-End point for:
-1. Employees: /employees
-2. Particular employee: /employees/{id}
-Example of the expected output after the use "/employees"end point:
-    <employees size = "2">
-        <employee id = "1">
-              <firstName>Nikhil</firstName>
-              <lastName>Sharma</lastName>
-              <mobile>1234567890</mobile>
-        </employee>
-        <employee id = "2">
-              <firstName>Chris</firstName>
-              <lastName>Hammer</lastName>
-              <mobile>2134567890</mobile>
-        </employee>
-    </employees>
+    Initial data:
+    {
+        "employees": [
+            {
+                "employeeId": 1,
+                "firstName": "Nikhil",
+                "lastName": "Sharma",
+                "mobileNumber": 1324657890,
+                "dateOfJoining": "02-02-2002",
+                "projects": [
+                    {
+                        "projectId": 1,
+                        "startingDateOfProject": "03-05-2002",
+                        "employeeRole": "Frontend Developer"
+                    },
+                    {
+                        "projectId": 2,
+                        "startingDateOfProject": "05-09-2002",
+                        "employeeRole": "UI Developer"
+                    }
+                ]
+            },
+            {
+                "employeeId": 2,
+                "firstName": "Ben",
+                "lastName": "Cooper",
+                "mobileNumber": 1924657890,
+                "dateOfJoining": "04-04-2004",
+                "projects": [
+                    {
+                        "projectId": 3,
+                        "startingDateOfProject": "05-05-2005",
+                        "employeeRole": "Backend Developer"
+                    },
+                    {
+                        "projectId": 4,
+                        "startingDateOfProject": "06-07-2005",
+                        "employeeRole": "Backend Developer"
+                    }
+                ]
+            }
+        ]
+    }
+    Let us suppose that this is the data available in the employee database. Now we will use RESTful APIs
+    and endpoints to render or manipulate the data.
 
-Example of the expected output after the use of "/employees/{id}" end point:
-    <employee id = "1">
-        <link rel="self" href="/employees/1"/>
-        <firstName>First Name: Nikhil</firstName>
-        <lastName>Last Name: Sharma</lastName>
-        <mobile>1234567890</mobile>
+    Let's take the root-endpoint for the organisation to be "api.organisation.com"
+    So to access all the employees data we will use the following path: api.organisation.com/v3/employees
+    To access a particular employee: api.organisation.com/v3/employees/id/{employeeId}
+    
+    1. Creation of a new employee by HR:
+    Method: POST
+    Endpoint: api.organisation.com/v3/employees
+    Command: POST /v3/employees
+    Content type: application/json
 
-        <projects size = "2">
-            <project id = "1">
-                <title>Title: AI</title>
-                <date>Started: 01-01-2019</date>
-                <role>AI Expert</role>
-            </project>
-            <project id = "2">
-                <title>Title: Backend</title>
-                <date>Started: 02-01-2019</date>
-                <role>Java</role>
-            </project>
-        </projects>
-    </employee>
+    POST request is used to create a new resource on a server. This will create an entry for a new employee
 
-3. Projects: /projects
-4. Particular project: /projects/{id}
+    Request body: 
+    {
+        "employeeId": 3,
+        "firstName": "Tim",
+        "lastName": "Hammer",
+        "mobileNumber": 1929757890,
+        "dateOfJoining": "07-09-2018",
+        "projects": [
+            {
+                "projectId": 5,
+                "startingDateOfProject": "05-11-2018",
+                "employeeRole": "Graphic Engineer"
+            },
+            {
+                "projectId": 6,
+                "startingDateOfProject": "06-01-2019",
+                "employeeRole": "AI developer"
+            }
+        ]
+    }
+    This will enter the required information regarding the new employee and add it to the server.
 
-To get the details of a particular employee: HTTP GET /employees/{id}
+    2. To get list of all employees: 
+    Method: GET
+    Endpoint: api.organisation.com/v3/employees
+    Command: GET /v3/employees
+    Content type: application/json
 
-To create a new employee in employees: HTTP POST /employees
+    GET request is used to get a resource from a server. 
+    As this is a GET request there will be no requirement for the request body.
+    //This will fetch and print the information of all the employees
 
-Update information of a certain employee: HTTP PUT /employees/{id}
+    3. To get information of a particular employee: 
+    Method: GET
+    Endpoint: api.organisation.com/v3/employees/id/{employeeId}
+    Command: GET /v3/employees/id/1
+    //This will fetch and print the information of the employee with id=1
+    Output:
+    {
+        "employees": [
+            {
+                "employeeId": 1,
+                "firstName": "Nikhil",
+                "lastName": "Sharma",
+                "mobileNumber": 1324657890,
+                "dateOfJoining": "02-02-2002",
+                "projects": [
+                    {
+                        "projectId": 1,
+                        "startingDateOfProject": "03-05-2002",
+                        "employeeRole": "Frontend Developer"
+                    },
+                    {
+                        "projectId": 2,
+                        "startingDateOfProject": "05-09-2002",
+                        "employeeRole": "UI Developer"
+                    }
+                ]
+            }
+        ]
+    }
 
-Removing information of a certain employee: HTTP DELETE /employees/{id}
+    4. Update some data of an employee
+    Methood: PUT
+    Endpoint: api.organisation.com/v3/employees/id/{employeeId}
+    Command: PUT /v3/employee/id/2
+
+    PUT request is used to update a resource on a server for the selected employee.
+    Request body: 
+    {
+        "firstName": "Lee"
+    }
+    //Now the first name of employee #2 is Lee, not Ben
+    This will update the firstName of employee with id=2 and replace it with "Lee"
+
+    5. Select all projects assigned to an employee: 
+    METHOD: GET
+    Endpoint: api.organisation.com/v3/employees/id/{employeeId}/projects
+    Command: GET /v3/employees/id/3/projects
+
+    //This will fetch the information regarding the projects of the employee with id=3
+    {
+        "projects": [
+            {
+                "projectId": 5,
+                "startingDateOfProject": "05-11-2018",
+                "employeeRole": "Graphic Engineer"
+            },
+            {
+                "projectId": 6,
+                "startingDateOfProject": "06-01-2019",
+                "employeeRole": "AI developer"
+            }
+        ]
+    }
+
+    6. Assign project(s) to an employee by HR:
+    Method: POST
+    Endpoint: api.organisation.com/v3/employees/id/{employeeId}/projects
+    Command: POST /v3/employees/id/3/projects
+    Content type: application/json
+    Request body: 
+    {
+        "projectId": 7,
+        "startingDateOfProject": "09-02-2019",
+        "employeeRole": "Graphic Engineer"
+    }
+    This will add another project with "projectID": 7 to employee with "employeeID": 3.
+    //Now there are 3 projects for employee #3
+
+    7. Edit project information by the HR: 
+    Method: PUT
+    Endpoint: api.organisation.com/v3/employees/id/{employeeId}/projects
+    Command: PUT /v3/employees/id/3/projects
+    Content type: application/json
+    Request body: 
+    {
+        "projectId": 7,
+        "startingDateOfProject": "09-02-2019",
+        "employeeRole": "Graphic Designer"
+    }
+    //Now the role of employee #3 in project #7 is changed from "Graphic Engineer" to "Graphic Designer".
+
+    8. Select a project by the employee: 
+    Method: PUT
+    Endpoint: api.organisation.com/v3/employees/id/{employeeId}
+    Command: PUT /v3/employees/3
+    Content type: application/json
+    Request body: 
+    {
+        "activeProject": 7
+    }
+    //This implies that employee #3 is currently working on project #7.
+
+    Final Data:
+    {
+        "employees": [
+            {
+                "employeeId": 1,
+                "firstName": "Nikhil",
+                "lastName": "Sharma",
+                "mobileNumber": 1324657890,
+                "dateOfJoining": "02-02-2002",
+                "projects": [
+                    {
+                        "projectId": 1,
+                        "startingDateOfProject": "03-05-2002",
+                        "employeeRole": "Frontend Developer"
+                    },
+                    {
+                        "projectId": 2,
+                        "startingDateOfProject": "05-09-2002",
+                        "employeeRole": "UI Developer"
+                    }
+                ]
+            },
+            {
+                "employeeId": 2,
+                "firstName": "Lee",
+                "lastName": "Cooper",
+                "mobileNumber": 1924657890,
+                "dateOfJoining": "04-04-2004",
+                "projects": [
+                    {
+                        "projectId": 3,
+                        "startingDateOfProject": "05-05-2005",
+                        "employeeRole": "Backend Developer"
+                    },
+                    {
+                        "projectId": 4,
+                        "startingDateOfProject": "06-07-2005",
+                        "employeeRole": "Backend Developer"
+                    }
+                ]
+            },
+            {
+                "employeeId": 3,
+                "firstName": "Tim",
+                "lastName": "Hammer",
+                "mobileNumber": 1929757890,
+                "dateOfJoining": "07-09-2018",
+                "projects": [
+                    {
+                        "projectId": 5,
+                        "startingDateOfProject": "05-11-2018",
+                        "employeeRole": "Graphic Engineer"
+                    },
+                    {
+                        "projectId": 6,
+                        "startingDateOfProject": "06-01-2019",
+                        "employeeRole": "AI developer"
+                    },
+                    {
+                        "projectId": 7,
+                        "startingDateOfProject": "09-02-2019",
+                        "employeeRole": "Graphic Designer"
+                    }
+                ]
+            }
+        ]
+    }
